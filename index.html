@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wasp — trading journal and contact</title>
+<meta name="description" content="Personal trading site. About me, market approach and contact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --bg-alt:#F1F0EB;
+    --ink:#15161A;
+    --ink-soft:#5B5D63;
+    --line:#E2E1DA;
+    --wasp:#F0B400;
+    --wasp-ink:#15161A;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  a{color:inherit;}
+
+  ::selection{background:var(--wasp);color:var(--wasp-ink);}
+
+  :focus-visible{
+    outline:2px solid var(--wasp-ink);
+    outline-offset:3px;
+  }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- Sting divider (signature element) ---------- */
+  .sting{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--wasp);
+  }
+  .sting svg{display:block;}
+
+  .rule{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:0;
+    color:var(--ink-soft);
+  }
+  .rule::before,
+  .rule::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding:26px 0;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    background:rgba(250,250,247,0.86);
+    backdrop-filter:blur(6px);
+    z-index:10;
+  }
+  header .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:-0.01em;
+    display:flex;
+    align-items:center;
+    gap:2px;
+  }
+  .logo .dot{color:var(--wasp);}
+
+  nav{display:flex;gap:28px;}
+  nav a{
+    font-size:14px;
+    text-decoration:none;
+    color:var(--ink-soft);
+    position:relative;
+    padding-bottom:3px;
+  }
+  nav a::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:2px;
+    background:var(--wasp);
+    transform:scaleX(0);
+    transform-origin:right;
+    transition:transform .25s cubic-bezier(.65,0,.35,1);
+  }
+  nav a:hover::after,
+  nav a:focus-visible::after{
+    transform:scaleX(1);
+    transform-origin:left;
+  }
+  nav a:hover,
+  nav a:focus-visible{color:var(--ink);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:96px 0 76px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.09em;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .hero h1{
+    font-size:clamp(38px, 6vw, 58px);
+    line-height:1.04;
+    max-width:11ch;
+  }
+  .hero h1 .accent{
+    color:var(--wasp-ink);
+    background:linear-gradient(to top, var(--wasp) 38%, transparent 38%);
+  }
+  .hero p{
+    margin-top:24px;
+    max-width:46ch;
+    font-size:17px;
+    color:var(--ink-soft);
+  }
+  .hero-actions{
+    margin-top:36px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 20px;
+    font-size:14px;
+    font-weight:500;
+    text-decoration:none;
+    border-radius:2px;
+    transition:transform .18s ease, background .18s ease;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--bg);
+  }
+  .btn-primary:hover{background:#2b2c31;transform:translateY(-1px);}
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--ink);
+  }
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-1px);}
+
+  /* ---------- Sections ---------- */
+  section{padding:64px 0;}
+  section + section{border-top:1px solid var(--line);}
+
+  .section-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-label .wasp{color:var(--wasp);font-weight:700;}
+
+  .about h2{
+    font-size:26px;
+    margin-bottom:18px;
+    max-width:22ch;
+  }
+  .about p{
+    color:var(--ink-soft);
+    max-width:58ch;
+    margin-bottom:14px;
+  }
+  .about p:last-child{margin-bottom:0;}
+  .about strong{color:var(--ink);font-weight:500;}
+
+  .focus-grid{
+    margin-top:32px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .focus-item{
+    background:var(--bg);
+    padding:22px 18px;
+  }
+  .focus-item .k{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--wasp-ink);
+    background:var(--wasp);
+    display:inline-block;
+    padding:1px 6px;
+    margin-bottom:12px;
+  }
+  .focus-item h3{
+    font-size:15px;
+    margin-bottom:6px;
+  }
+  .focus-item p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Contact ---------- */
+  .contact h2{
+    font-size:26px;
+    margin-bottom:12px;
+  }
+  .contact > p{
+    color:var(--ink-soft);
+    max-width:50ch;
+    margin-bottom:32px;
+  }
+  .contact-list{
+    display:flex;
+    flex-direction:column;
+    border-top:1px solid var(--line);
+  }
+  .contact-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 4px;
+    border-bottom:1px solid var(--line);
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .contact-row .label{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    width:110px;
+    flex-shrink:0;
+  }
+  .contact-row .value{
+    font-size:16px;
+    flex:1;
+  }
+  .contact-row .arrow{
+    color:var(--ink-soft);
+    transition:transform .2s ease, color .2s ease;
+  }
+  .contact-row:hover .arrow{
+    transform:translate(3px,-3px);
+    color:var(--wasp-ink);
+  }
+  .contact-row:hover .value{color:var(--wasp-ink);}
+  .contact-row:hover{background:var(--bg-alt);}
+
+  .disclaimer{
+    margin-top:40px;
+    padding:16px 18px;
+    background:var(--bg-alt);
+    border-left:2px solid var(--wasp);
+    font-size:13px;
+    color:var(--ink-soft);
+    max-width:56ch;
+  }
+
+  footer{
+    padding:32px 0 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  footer .logo{font-size:14px;}
+
+  @media (max-width: 640px){
+    .focus-grid{grid-template-columns:1fr;}
+    header .wrap{gap:14px;}
+    nav{gap:18px;}
+    .contact-row{align-items:flex-start;flex-direction:column;gap:4px;}
+    .contact-row .arrow{align-self:flex-end;margin-top:-22px;}
+    footer{flex-direction:column;gap:8px;text-align:center;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">wasp<span class="dot">.</span>sk</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="sting">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 13L13 1M13 1H5M13 1V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      Trading · Markets · Discipline
+    </div>
+    <h1>Fast decisions,<br>precise <span class="accent">strikes</span>.</h1>
+    <p>Welcome to my personal trading site. Here you'll find who I am, how I approach the market, and how to get in touch.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#contact">Get in touch</a>
+      <a class="btn btn-ghost" href="#about">About me</a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="section-label"><span class="wasp">01</span> About</div>
+    <h2>I treat trading as a craft, not gambling.</h2>
+    <p>My name is <strong>[Your name]</strong> and I'm fully committed to trading. This site is my digital business card — a place to learn a bit about me and my approach to the markets, or to get in touch.</p>
+    <p>I focus mainly on <strong>[e.g. forex / crypto / stocks]</strong> and aim for a systematic, disciplined approach — no emotions, with clearly defined risk management.</p>
+
+    <div class="focus-grid">
+      <div class="focus-item">
+        <span class="k">Market</span>
+        <h3>Focus</h3>
+        <p>Add the markets or instruments you trade.</p>
+      </div>
+      <div class="focus-item">
+        <span class="k">Style</span>
+        <h3>Approach</h3>
+        <p>Short-term, swing, or position trading — describe your style.</p>
+      </div>
+      <div class="focus-item">
+        <span class="k">Risk</span>
+        <h3>Management</h3>
+        <p>A few words on how you approach risk management.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="section-label"><span class="wasp">02</span> Contact</div>
+    <h2>Get in touch</h2>
+    <p>Have a question, a collaboration idea, or just want to swap a few thoughts on the market? Write to me.</p>
+
+    <div class="contact-list">
+      <a class="contact-row" href="mailto:info@wasp.sk">
+        <span class="label mono">email</span>
+        <span class="value">info@wasp.sk</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="contact-row" href="#" target="_blank" rel="noopener">
+        <span class="label mono">twitter/x</span>
+        <span class="value">@wasp</span>
+        <span class="arrow">↗</span>
+      </a>
+      <a class="contact-row" href="#" target="_blank" rel="noopener">
+        <span class="label mono">telegram</span>
+        <span class="value">t.me/wasp</span>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <p class="disclaimer">The content on this site is for informational purposes only and does not constitute investment advice. Trading involves risk — only trade with funds you can afford to lose.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+    <span class="logo">wasp<span class="dot">.</span>sk</span>
+    <span>&copy; 2026 — all rights reserved</span>
+  </div>
+</footer>
+
+</body>
+</html>
